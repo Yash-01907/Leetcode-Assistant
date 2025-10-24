@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "LeetCode Assistant",
+  "version": "1.0",
+  "description": "A browser extension to assist with LeetCode problems",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": ["activeTab", "storage", "tabs"],
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "icons/icon16.png"
+  },
+  "host_permissions": ["*://leetcode.com/problems/*"],
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://leetcode.com/problems/*"],
+      "js": ["content_script.js"]
+    }
+  ]
+}

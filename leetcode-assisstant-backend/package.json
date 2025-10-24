@@ -1,0 +1,21 @@
+{
+  "name": "leetcode-assisstant-backend",
+  "version": "1.0.0",
+  "description": "Backend for leetcode assistant extension",
+  "license": "ISC",
+  "author": "yash pandey",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev":"nodemon index.js",
+    "start" :"node index.js"
+  },
+  "dependencies": {
+    "@google/genai": "^1.26.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "mongoose": "^8.19.2",
+    "nodemon": "^3.1.10"
+  }
+}
