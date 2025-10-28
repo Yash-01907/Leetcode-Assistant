@@ -26,6 +26,8 @@ router.post('/guidance', async (req, res) => {
         console.log(`Cache MISS for ${problemSlug}. Calling AI...`);
         const generatedData = await generateGuidance(problemSlug);
 
+        console.log(generatedData);
+
         // The generateGuidance function already saves to DB, so just return
         return res.status(201).json(generatedData);
 

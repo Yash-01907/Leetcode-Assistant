@@ -21,7 +21,6 @@ const problemSchema = new Schema(
     },
     solution2: {
       type: String,
-      required: true,
     },
   },
   { timestamps: true }

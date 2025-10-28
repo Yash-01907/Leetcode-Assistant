@@ -53,11 +53,16 @@ export async function generateGuidance(problemSlug) {
         const guidanceData = JSON.parse(jsonText);
 
         // 2. Store in DB
-        const newProblem = new ProblemModel({
-            problemSlug: problemSlug,
-            ...guidanceData,
-        });
-        await newProblem.save();
+        try {
+            const newProblem = new ProblemModel({
+                problemSlug: problemSlug,
+                ...guidanceData,
+            });
+            await newProblem.save();
+        } catch (dbError) {
+            console.error("Database save error:", dbError);
+            throw new Error("Failed to save guidance to database.");
+        }
 
         return guidanceData;
 
