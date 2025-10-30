@@ -9,29 +9,49 @@ function PopUp() {
 
   useEffect(() => {
     // Get the problem slug from the content script
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]) {
-        chrome.tabs.sendMessage(
-          tabs[0].id,
-          { action: "detectProblem" },
-          (response) => {
-            if (response && response.slug) {
-              setProblemSlug(response.slug);
-            } else {
-              setProblemSlug("Not on a LeetCode problem page.");
+    try {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (chrome.runtime.lastError) {
+          console.error('Chrome tabs query error:', chrome.runtime.lastError);
+          setError('Extension error: Unable to access current tab');
+          setIsLoading(false);
+          return;
+        }
+        console.log(tabs)
+        if (tabs[0]) {
+          chrome.tabs.sendMessage(
+            tabs[0].id,
+            { action: "detectProblem" },
+            (response) => {
+              if (chrome.runtime.lastError) {
+                console.error('Chrome message error:', chrome.runtime.lastError);
+                setProblemSlug("Not on a LeetCode problem page.");
+                return;
+              }
+              
+              if (response && response.slug) {
+                setProblemSlug(response.slug);
+              } else {
+                setProblemSlug("Not on a LeetCode problem page.");
+              }
             }
-          }
-        );
-      }
-    });
+          );
+        } else {
+          setError('No active tab found');
+          setIsLoading(false);
+        }
+      });
+    } catch (error) {
+      console.error('Extension API error:', error);
+      setError('Extension error: Unable to communicate with content script');
+      setIsLoading(false);
+    }
   }, []);
 
-  // ... useEffect for getting the problem slug from the Content Script (MVE logic) ...
 
   useEffect(() => {
     // Check if we have a slug and haven't fetched data yet
     if (problemSlug) {
-      console.log(problemSlug);
       fetchGuidance(problemSlug);
     } else if (problemSlug === "Not on a LeetCode problem page.") {
       setIsLoading(false); // Stop loading if not on a problem page
@@ -71,6 +91,7 @@ function PopUp() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Origin": chrome.runtime.getURL(""),
         },
         body: JSON.stringify({ problemSlug: slug }),
       });
@@ -95,10 +116,6 @@ function PopUp() {
         console.error("Failed to store in chrome.storage.local:", storageError);
       }
 
-      // Verify storage worked
-      chrome.storage.local.get([slug], (result) => {
-        console.log(`Verification - stored data for ${slug}:`, result);
-      });
     } catch (err) {
       console.error(err);
       setError("Error loading guidance. Please check the backend.");

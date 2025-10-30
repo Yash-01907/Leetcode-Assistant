@@ -23,6 +23,10 @@ export async function chatWithContext({ problemSlug, userQuery, chatContext, pro
     }
 
     // 2. Call the AI with the constrained prompt
+    console.log(`Starting AI chat for problem: ${problemSlug}, context: ${chatContext}`);
+    console.log(`System instruction length: ${systemInstruction.length} characters`);
+    
+    const startTime = Date.now();
     try {
         const response = await ai.models.generateContent({
             model: 'gemini-2.0-flash',
@@ -32,10 +36,21 @@ export async function chatWithContext({ problemSlug, userQuery, chatContext, pro
             },
         });
 
+        const duration = Date.now() - startTime;
+        console.log(`AI chat completed in ${duration}ms for problem: ${problemSlug}`);
+        console.log(`Response length: ${response.text.length} characters`);
+        
         return response.text; // Return the AI's plain text response
 
     } catch (error) {
-        console.error("AI Chat Error:", error);
+        console.error("AI Chat Error:", {
+            error: error.message,
+            problemSlug,
+            userQuery: userQuery.substring(0, 100),
+            chatContext,
+            stack: error.stack,
+            timestamp: new Date().toISOString()
+        });
         return "Sorry, I ran into an error generating that response.";
     }
 }

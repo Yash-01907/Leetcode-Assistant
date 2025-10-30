@@ -23,11 +23,11 @@ function ChatBox({ slug, context }) {
                     chatContext: context 
                 }),
             });
+           
             const data = await response.json();
             
             // Add AI response (handle both success and error response from API)
             const aiResponseText = data.response || data.error || "Could not connect to the AI service.";
-            console.log(aiResponseText)
             setMessages(m => [...m, { sender: 'ai', text: aiResponseText }]);
 
         } catch (error) {
@@ -45,8 +45,8 @@ function ChatBox({ slug, context }) {
                 {messages.length === 0 ? (
                     <p style={{ color: '#888' }}>Ask me anything about the {context}!</p>
                 ) : (
-                    messages.map((msg, index) => (
-                        <div key={index} style={{ marginBottom: 5, color: msg.sender === 'user' ? 'blue' : 'green' }}>
+                    messages.map((msg) => (
+                        <div key={Date.now()} style={{ marginBottom: 5, color: msg.sender === 'user' ? 'blue' : 'green' }}>
                             <strong>{msg.sender}:</strong> {msg.text}
                         </div>
                     ))
@@ -57,7 +57,7 @@ function ChatBox({ slug, context }) {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => { if (e.key === 'Enter') sendMessage(); }}
+                onKeyDown={(e) => { if (e.key === 'Enter') sendMessage(); }}
                 disabled={isSending}
                 placeholder={`Ask about the ${context} only...`}
                 style={{ width: 'calc(100% - 70px)', padding: 5 }}
