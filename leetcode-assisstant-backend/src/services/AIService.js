@@ -19,11 +19,11 @@ const guidanceSchema = {
         },
         solution1: {
             type: 'string',
-            description: 'A full, well-commented Python solution for a simple approach (e.g., Brute Force).'
+            description: 'A full, well-commented java solution for a simple approach (e.g., Brute Force).'
         },
         solution2: {
             type: 'string',
-            description: 'A full, well-commented Python solution for the optimal/most efficient approach (e.g., O(n) or Dynamic Programming).'
+            description: 'A full, well-commented java solution for the optimal/most efficient approach (e.g., O(n) or Dynamic Programming).'
         }
     },
     required: ['hints', 'approach', 'solution1', 'solution2']
@@ -45,7 +45,7 @@ export async function generateGuidance(problemSlug) {
                 responseMimeType: 'application/json',
                 responseSchema: guidanceSchema,
                 // Add system instructions here for tone, format, and complexity
-                systemInstruction: 'Your output MUST be a JSON object that strictly adheres to the provided schema. Ensure solutions are in Python and highly readable. Hints must be very subtle.',
+                systemInstruction: 'Your output MUST be a JSON object that strictly adheres to the provided schema. Ensure solutions are in java and highly readable. Hints must be very subtle. The solutions MUST be generated as perfectly formatted Java code. Ensure that newline characters (\n) and necessary indentation are included in the string content to preserve readability.',
             },
         });
 

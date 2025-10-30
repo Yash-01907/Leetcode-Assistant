@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import ChatBox from './ChatBox'; // Import the new component
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const MIN_HINTS_TO_UNLOCK_APPROACH = 3;
 
@@ -57,16 +59,31 @@ function TabbedInterface({ guidance, problemSlug }) { // problemSlug prop added
                         </div>
                     );
                 } 
-                return (
-                    <div>
-                        <h3>Solution 1 (Optimal):</h3>
-                        <pre style={{ whiteSpace: 'pre-wrap' }}>{guidance.solution1}</pre>
-                        <h3>Solution 2 (Alternative):</h3>
-                        <pre style={{ whiteSpace: 'pre-wrap' }}>{guidance.solution2}</pre>
-                    </div>
-                );
-            default:
-                return null;
+               return (
+                <div>
+                    {/* Solution 1 */}
+                    <h3>Solution 1 (Optimal):</h3>
+                    <SyntaxHighlighter 
+                        language="java" // Specify the language (ensure your AI generates Python)
+                        style={vscDarkPlus}  // Apply the theme
+                        customStyle={{ fontSize: '14px', borderRadius: '5px' }} // Custom CSS
+                    >
+                        {guidance.solution1}
+                    </SyntaxHighlighter>
+
+                    {/* Solution 2 */}
+                    <h3>Solution 2 (Alternative):</h3>
+                    <SyntaxHighlighter 
+                        language="java"
+                        style={vscDarkPlus}
+                        customStyle={{ fontSize: '14px', borderRadius: '5px' }}
+                    >
+                        {guidance.solution2}
+                    </SyntaxHighlighter>
+                </div>
+            );
+        default:
+            return null;
         }
     };
 
